@@ -14,7 +14,7 @@ const LoginForm = ({ isAdmin = true, onSubmit }) => {
     try {
       const { token } = await adminLogin(username, password); // Call the login API
       localStorage.setItem("token", `Bearer ${token}`); // Save token in localStorage
-      navigate("/dashboard"); // Redirect to the home page
+      navigate("/logs"); // Redirect to the home page
     } catch (err) {
       setError("Invalid credentials"); // Show error message
     }
