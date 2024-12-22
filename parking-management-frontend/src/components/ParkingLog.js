@@ -73,7 +73,7 @@ const ParkingLog = () => {
         content:
           type === "entry"
             ? `Vehicle successfully entered. Assigned slot: ${response.data.slotNumber}`
-            : `Vehicle successfully exited. Parking fee: $${response.data.fee}`,
+            : `Vehicle successfully exited. Parking fee: Rs. ${response.data.fee}`,
       });
 
       fetchLogs();
@@ -229,17 +229,17 @@ const ParkingLog = () => {
                         Slot
                       </div>
                     </th>
-                    <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    {/* <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                       <div className="flex items-center">
                         <Clock className="h-4 w-4 text-gray-400 mr-2" />
                         Exit Time
                       </div>
-                    </th>
+                    </th> */}
                     <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                      <div className="flex items-center">
+                      {/* <div className="flex items-center">
                         <DollarSign className="h-4 w-4 text-gray-400 mr-2" />
                         Fee
-                      </div>
+                      </div> */}
                     </th>
                   </tr>
                 </thead>
@@ -258,14 +258,11 @@ const ParkingLog = () => {
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                           {log.slotNumber}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        {/* <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                           {log.exitTime
                             ? new Date(log.exitTime).toLocaleString()
                             : "-"}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {log.fee ? `$${log.fee}` : "-"}
-                        </td>
+                        </td> */}
                       </tr>
                     ))
                   )}
