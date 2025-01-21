@@ -18,6 +18,7 @@ const ParkingLog = () => {
   const [logs, setLogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(""); // New state for search query
 
   const fetchLogs = async () => {
     setIsLoading(true);
@@ -87,6 +88,10 @@ const ParkingLog = () => {
       setIsProcessing(false);
     }
   };
+  // Filter logs based on search query
+  const filteredLogs = logs.filter((log) =>
+    log.licensePlate.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   // Loading skeleton component
   const TableSkeleton = () => (
@@ -175,7 +180,16 @@ const ParkingLog = () => {
                 </button>
               </div>
             </div>
-
+            {/* Search Input */}
+            <div className="flex justify-between items-center">
+              <input
+                type="text"
+                placeholder="Search by license plate"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              />
+            </div>
             {/* Status Message */}
             {message.content && (
               <div
@@ -247,7 +261,7 @@ const ParkingLog = () => {
                   {isLoading ? (
                     <TableSkeleton />
                   ) : (
-                    logs.map((log, index) => (
+                    filteredLogs.map((log, index) => (
                       <tr key={index} className="hover:bg-gray-50">
                         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900">
                           {log.licensePlate}
@@ -258,11 +272,6 @@ const ParkingLog = () => {
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                           {log.slotNumber}
                         </td>
-                        {/* <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {log.exitTime
-                            ? new Date(log.exitTime).toLocaleString()
-                            : "-"}
-                        </td> */}
                       </tr>
                     ))
                   )}
