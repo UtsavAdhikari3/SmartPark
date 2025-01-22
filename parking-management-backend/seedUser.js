@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
 const dotenv = require("dotenv");
 const User = require("./models/User");
 
@@ -7,26 +6,25 @@ dotenv.config();
 
 const seedUser = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(process.env.MONGO_URI);
 
-    const existingUser = await User.findOne({ username: "user" });
+    const existingUser = await User.findOne({ username: "subash" });
     if (existingUser) {
-      console.log("user user already exists");
+      console.log("user already exists");
       process.exit(0);
     }
 
-    const hashedPassword = await bcrypt.hash("user123", 10);
+    const plainPassword = "subash123";
+
     const user = new User({
-      username: "user",
+      username: "subash",
       licensePlate: "k3rala",
-      password: hashedPassword,
+      password: plainPassword,
+      email: "subash@example.com",
     });
 
     await user.save();
-    console.log("user user created successfully");
+    console.log("User created successfully with password:", plainPassword);
     process.exit(0);
   } catch (err) {
     console.error("Error seeding user user:", err);
