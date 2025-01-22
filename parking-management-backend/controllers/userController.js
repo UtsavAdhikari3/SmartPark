@@ -1,22 +1,22 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const Admin = require("../models/Admin");
+const User = require("../models/User");
 
 exports.login = async (req, res) => {
-  const { username, password } = req.body;
+  const { username, licensePlate, password } = req.body;
 
   try {
-    const admin = await Admin.findOne({ username });
-    if (!admin) {
-      return res.status(400).json({ message: "Invalid credentials" });
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(400).json({ message: "what in the worldd" });
     }
 
-    const isMatch = await bcrypt.compare(password, admin.password);
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    const token = jwt.sign({ id: admin._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "20h",
     });
     res.json({ token });
