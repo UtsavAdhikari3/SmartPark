@@ -18,6 +18,11 @@ exports.login = async (req, res) => {
       return res.status(400).json({ message: "Invalid password" });
     }
 
+    // write code to check if the license plate is correct
+    if (licensePlate !== user.licensePlate) {
+      return res.status(400).json({ message: "Invalid license plate" });
+    }
+
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "20h",
     });
