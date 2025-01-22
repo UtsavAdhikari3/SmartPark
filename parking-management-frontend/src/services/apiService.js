@@ -1,16 +1,29 @@
-import axios from 'axios';
+import axios from "axios";
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = "http://localhost:5000/api";
 
 // Add token to headers
 const getAuthHeader = () => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem("token");
   return token ? { Authorization: token } : {};
 };
 
 // Admin login
 export const adminLogin = async (username, password) => {
-  const response = await axios.post(`${API_URL}/admin/login`, { username, password });
+  const response = await axios.post(`${API_URL}/admin/login`, {
+    username,
+    password,
+  });
+  return response.data;
+};
+
+// User login
+export const userLogin = async (username, licensePlate, password) => {
+  const response = await axios.post(`${API_URL}/user/login`, {
+    username,
+    licensePlate,
+    password,
+  });
   return response.data;
 };
 
@@ -25,7 +38,7 @@ export const getParkingLogs = async () => {
 // Log vehicle entry
 export const logVehicleEntry = async (formData) => {
   const response = await axios.post(`${API_URL}/parking/entry`, formData, {
-    headers: { 'Content-Type': 'multipart/form-data' }, // Required for file uploads
+    headers: { "Content-Type": "multipart/form-data" }, // Required for file uploads
   });
   return response.data;
 };
