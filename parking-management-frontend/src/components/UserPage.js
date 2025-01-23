@@ -1,9 +1,66 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 function UserPage() {
+  const [slots, setSlots] = useState([]);
+  const [vehicleInfo, setVehicleInfo] = useState(null);
+
+  useEffect(() => {
+    fetchParkingInfo();
+    fetchVehicleInfo();
+  }, []);
+
+  const fetchParkingInfo = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/parking/slots", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      const data = await response.json();
+      setSlots(data);
+    } catch (error) {
+      console.error("Error fetching slots:", error);
+    }
+  };
+
+  const fetchVehicleInfo = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/vehicle/info", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      const data = await response.json();
+      setVehicleInfo(data);
+    } catch (error) {
+      console.error("Error fetching vehicle info:", error);
+    }
+  };
+
   return (
     <div>
       <h1>Welcome to User Page</h1>
+
+      <div className="parking-info">
+        <h2>Available Parking Slots</h2>
+        <div className="slots-grid">
+          {slots.map((slot) => (
+            <div key={slot._id} className={`slot ${slot.status}`}>
+              Slot {slot.number} - {slot.status}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {vehicleInfo && (
+        <div className="vehicle-info">
+          <h2>Your Vehicle Information</h2>
+          <p>License Plate: {vehicleInfo.licensePlate}</p>
+          <p>Entry Time: {vehicleInfo.entryTime}</p>
+          <p>Parking Duration: {vehicleInfo.duration}</p>
+        </div>
+      )}
+
       <div>
         <button
           onClick={() => {

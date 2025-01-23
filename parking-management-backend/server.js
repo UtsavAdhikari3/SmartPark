@@ -14,11 +14,13 @@ require("dotenv").config();
 const adminRoutes = require("./routes/admin");
 const userRoutes = require("./routes/user");
 const parkingRoutes = require("./routes/parking");
+const vehicleRoutes = require("./routes/vehicle"); // Add this line
 
 // Use routes
 app.use("/api/admin", adminRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/parking", parkingRoutes);
+app.use("/api/vehicle", vehicleRoutes); // Add this line
 
 // Connect to MongoDB
 mongoose
