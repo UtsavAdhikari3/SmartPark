@@ -25,7 +25,6 @@ function UserPage() {
 
   const fetchVehicleInfo = async () => {
     try {
-      // Get license plate from localStorage that was saved during login
       const licensePlate = localStorage.getItem("licensePlate");
       const response = await fetch(
         `http://localhost:5000/api/vehicle/info?licensePlate=${licensePlate}`,
@@ -43,14 +42,25 @@ function UserPage() {
   };
 
   return (
-    <div>
-      <h1>Welcome to User Page</h1>
+    <div className="min-h-screen bg-gray-100 p-6">
+      <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">
+        Welcome to User Page
+      </h1>
 
-      <div className="parking-info">
-        <h2>Available Parking Slots</h2>
-        <div className="slots-grid">
+      <div className="bg-white shadow-md rounded-lg p-6 mb-8">
+        <h2 className="text-2xl font-semibold text-gray-700 mb-4">
+          Available Parking Slots
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {slots.map((slot, index) => (
-            <div key={index} className={`slot ${slot.status}`}>
+            <div
+              key={index}
+              className={`p-4 rounded-lg text-center font-medium shadow-md ${
+                slot.status === "occupied"
+                  ? "bg-red-100 text-red-600"
+                  : "bg-green-100 text-green-600"
+              }`}
+            >
               {slot.number} - {slot.status}
             </div>
           ))}
@@ -58,23 +68,44 @@ function UserPage() {
       </div>
 
       {vehicleInfo && (
-        <div className="vehicle-info">
-          <h2>Your Vehicle Information</h2>
-          <p>License Plate: {vehicleInfo.licensePlate}</p>
-          <p>Entry Time: {new Date(vehicleInfo.entryTime).toLocaleString()}</p>
-          {/* <p>Parking Duration: {vehicleInfo.duration}</p> */}
-          <p>Status: {vehicleInfo.isOccupied ? "Occupied" : "Free"}</p>
-          <p>Slot Number: {vehicleInfo.slotNumber}</p>
-          {vehicleInfo.fee && <p>Fee: ${vehicleInfo.fee}</p>}
+        <div className="bg-white shadow-md rounded-lg p-6 mb-8">
+          <h2 className="text-2xl font-semibold text-gray-700 mb-4">
+            Your Vehicle Information
+          </h2>
+          <div className="space-y-2">
+            <p className="text-gray-600">
+              <span className="font-medium text-gray-800">License Plate:</span>{" "}
+              {vehicleInfo.licensePlate}
+            </p>
+            <p className="text-gray-600">
+              <span className="font-medium text-gray-800">Entry Time:</span>{" "}
+              {new Date(vehicleInfo.entryTime).toLocaleString()}
+            </p>
+            <p className="text-gray-600">
+              <span className="font-medium text-gray-800">Status:</span>{" "}
+              {vehicleInfo.isOccupied ? "Occupied" : "Free"}
+            </p>
+            <p className="text-gray-600">
+              <span className="font-medium text-gray-800">Slot Number:</span>{" "}
+              {vehicleInfo.slotNumber}
+            </p>
+            {vehicleInfo.fee && (
+              <p className="text-gray-600">
+                <span className="font-medium text-gray-800">Fee:</span> $
+                {vehicleInfo.fee}
+              </p>
+            )}
+          </div>
         </div>
       )}
 
-      <div>
+      <div className="flex justify-center">
         <button
           onClick={() => {
             localStorage.removeItem("token");
             window.location.href = "/user-login";
           }}
+          className="bg-blue-600 text-white px-6 py-2 rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
         >
           Logout
         </button>
