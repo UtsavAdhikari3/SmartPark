@@ -14,6 +14,7 @@ import axios from "axios";
 
 const ParkingLog = () => {
   const [file, setFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null); // Add this line
   const [message, setMessage] = useState({ type: "", content: "" });
   const [logs, setLogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -41,10 +42,26 @@ const ParkingLog = () => {
     fetchLogs();
   }, []);
 
+  useEffect(() => {
+    // Cleanup function for the preview URL
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
+
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
       setFile(selectedFile);
+      // Cleanup previous preview URL
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+      // Create new preview URL
+      const url = URL.createObjectURL(selectedFile);
+      setPreviewUrl(url);
       setMessage({ type: "", content: "" });
     }
   };
@@ -143,12 +160,25 @@ const ParkingLog = () => {
                     onChange={handleFileChange}
                     accept="image/*"
                   />
-                  <div className="text-center">
-                    <Upload className="mx-auto h-8 w-8 text-gray-400 group-hover:text-indigo-500" />
-                    <span className="mt-2 block text-sm font-medium text-gray-600 group-hover:text-indigo-500">
-                      {file ? file.name : "Upload vehicle image"}
-                    </span>
-                  </div>
+                  {previewUrl ? (
+                    <div className="relative w-full">
+                      <img
+                        src={previewUrl}
+                        alt="Preview"
+                        className="max-h-48 mx-auto object-contain rounded-lg"
+                      />
+                      <span className="mt-2 block text-sm font-medium text-gray-600 text-center">
+                        Click to change image
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="text-center">
+                      <Upload className="mx-auto h-8 w-8 text-gray-400 group-hover:text-indigo-500" />
+                      <span className="mt-2 block text-sm font-medium text-gray-600 group-hover:text-indigo-500">
+                        Upload vehicle image
+                      </span>
+                    </div>
+                  )}
                 </label>
               </div>
 
