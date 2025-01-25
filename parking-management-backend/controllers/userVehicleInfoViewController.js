@@ -41,29 +41,53 @@ exports.getVehicleInfo = async (req, res) => {
       return res.status(400).json({ message: "License plate is required" });
     }
 
-    const vehicle = await Vehicle.findOne({ licensePlate })
-      .sort({ entryTime: -1 })
-      .limit(1);
+    const logs = await ParkingSlot.find();
+    const foundVehicle = logs.find((log) => log.licensePlate === licensePlate);
+    // const formattedLogs = logs.map((log) => ({
+    //   licensePlate: log.licensePlate,
+    //   entryTime: log.entryTime,
+    //   slotNumber: log.slotNumber || "-",
 
-    if (!vehicle) {
-      return res.status(404).json({ message: "No vehicle information found" });
-    }
+    //   fee: log.fee ? `${log.fee} NPR` : "-",
+    // }));
 
-    // Calculate duration
-    const duration = vehicle.exitTime
-      ? new Date(vehicle.exitTime) - new Date(vehicle.entryTime)
-      : new Date() - new Date(vehicle.entryTime);
-
-    res.json({
-      licensePlate: vehicle.licensePlate,
-      entryTime: vehicle.entryTime,
-      exitTime: vehicle.exitTime,
-      duration: Math.round(duration / (1000 * 60)) + " minutes",
-      status: vehicle.exitTime ? "Completed" : "Parked",
-      slotNumber: vehicle.slotNumber,
-      fee: vehicle.fee,
-    });
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching vehicle information" });
+    res.json(foundVehicle);
+  } catch (err) {
+    console.error("Error fetching parking logs:", err.message);
+    res
+      .status(500)
+      .json({ message: "Error fetching logs", error: err.message });
   }
+  // try {
+  //   const { licensePlate } = req.query;
+
+  //   if (!licensePlate) {
+  //     return res.status(400).json({ message: "License plate is required" });
+  //   }
+
+  //   const vehicle = await Vehicle.findOne({ licensePlate })
+  //     .sort({ entryTime: -1 })
+  //     .limit(1);
+
+  //   if (!vehicle) {
+  //     return res.status(404).json({ message: "No vehicle information found" });
+  //   }
+
+  //   // Calculate duration
+  //   const duration = vehicle.exitTime
+  //     ? new Date(vehicle.exitTime) - new Date(vehicle.entryTime)
+  //     : new Date() - new Date(vehicle.entryTime);
+
+  //   res.json({
+  //     licensePlate: vehicle.licensePlate,
+  //     entryTime: vehicle.entryTime,
+  //     exitTime: vehicle.exitTime,
+  //     duration: Math.round(duration / (1000 * 60)) + " minutes",
+  //     status: vehicle.exitTime ? "Completed" : "Parked",
+  //     slotNumber: vehicle.slotNumber,
+  //     fee: vehicle.fee,
+  //   });
+  // } catch (error) {
+  //   res.status(500).json({ message: "Error fetching vehicle information" });
+  // }
 };

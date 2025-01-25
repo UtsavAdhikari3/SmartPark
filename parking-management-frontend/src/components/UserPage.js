@@ -62,8 +62,8 @@ function UserPage() {
           <h2>Your Vehicle Information</h2>
           <p>License Plate: {vehicleInfo.licensePlate}</p>
           <p>Entry Time: {vehicleInfo.entryTime}</p>
-          <p>Parking Duration: {vehicleInfo.duration}</p>
-          <p>Status: {vehicleInfo.status}</p>
+          {/* <p>Parking Duration: {vehicleInfo.duration}</p> */}
+          <p>Status: {vehicleInfo.isOccupied ? "Occupied" : "Free"}</p>
           <p>Slot Number: {vehicleInfo.slotNumber}</p>
           {vehicleInfo.fee && <p>Fee: ${vehicleInfo.fee}</p>}
         </div>
