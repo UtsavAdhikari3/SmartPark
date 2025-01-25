@@ -61,7 +61,7 @@ function UserPage() {
         <div className="vehicle-info">
           <h2>Your Vehicle Information</h2>
           <p>License Plate: {vehicleInfo.licensePlate}</p>
-          <p>Entry Time: {vehicleInfo.entryTime}</p>
+          <p>Entry Time: {new Date(vehicleInfo.entryTime).toLocaleString()}</p>
           {/* <p>Parking Duration: {vehicleInfo.duration}</p> */}
           <p>Status: {vehicleInfo.isOccupied ? "Occupied" : "Free"}</p>
           <p>Slot Number: {vehicleInfo.slotNumber}</p>
