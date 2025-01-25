@@ -44,9 +44,9 @@ function UserPage() {
       <div className="parking-info">
         <h2>Available Parking Slots</h2>
         <div className="slots-grid">
-          {slots.map((slot) => (
-            <div key={slot._id} className={`slot ${slot.status}`}>
-              Slot {slot.number} - {slot.status}
+          {slots.map((slot, index) => (
+            <div key={index} className={`slot ${slot.status}`}>
+              {slot.number} - {slot.status}
             </div>
           ))}
         </div>

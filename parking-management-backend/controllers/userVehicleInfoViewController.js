@@ -8,8 +8,26 @@ const Vehicle = require("../models/Vehicle");
 
 exports.getAvailableSlots = async (req, res) => {
   try {
-    const slots = await ParkingSlot.find();
-    res.json(slots);
+    const totalFloors = 2;
+    const slotsPerFloor = 16;
+    const occupiedSlots = await ParkingSlot.find({ isOccupied: true });
+    const occupiedSlotNumbers = occupiedSlots.map((slot) => slot.slotNumber);
+
+    // Create array of all possible slots with their status
+    let allSlots = [];
+    for (let floor = 1; floor <= totalFloors; floor++) {
+      for (let slot = 1; slot <= slotsPerFloor; slot++) {
+        const slotNumber = `${floor}-${slot}`;
+        allSlots.push({
+          number: `Floor: ${floor}- Slot: ${slot}`,
+          status: occupiedSlotNumbers.includes(slotNumber)
+            ? "occupied"
+            : "available",
+        });
+      }
+    }
+
+    res.json(allSlots);
   } catch (error) {
     res.status(500).json({ message: "Error fetching parking slots" });
   }
@@ -24,7 +42,7 @@ exports.getVehicleInfo = async (req, res) => {
     if (!vehicle) {
       return res.status(404).json({ message: "No vehicle information found" });
     }
-
+    console.log("vehicle is", vehicle);
     // Calculate duration
     const duration = vehicle.exitTime
       ? new Date(vehicle.exitTime) - new Date(vehicle.entryTime)
