@@ -25,11 +25,16 @@ function UserPage() {
 
   const fetchVehicleInfo = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/vehicle/info", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      // Get license plate from localStorage that was saved during login
+      const licensePlate = localStorage.getItem("licensePlate");
+      const response = await fetch(
+        `http://localhost:5000/api/vehicle/info?licensePlate=${licensePlate}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
       const data = await response.json();
       setVehicleInfo(data);
     } catch (error) {
@@ -58,6 +63,9 @@ function UserPage() {
           <p>License Plate: {vehicleInfo.licensePlate}</p>
           <p>Entry Time: {vehicleInfo.entryTime}</p>
           <p>Parking Duration: {vehicleInfo.duration}</p>
+          <p>Status: {vehicleInfo.status}</p>
+          <p>Slot Number: {vehicleInfo.slotNumber}</p>
+          {vehicleInfo.fee && <p>Fee: ${vehicleInfo.fee}</p>}
         </div>
       )}
 
